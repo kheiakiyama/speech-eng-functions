@@ -1,9 +1,9 @@
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 
-public class IssueEntity : TableEntity
+public class QuestionEntity : TableEntity
 {
-    public IssueEntity(int id)
+    public QuestionEntity(int id)
     {
         this.PartitionKey = "speech-eng";
         this.RowKey = id.ToString();
@@ -11,7 +11,7 @@ public class IssueEntity : TableEntity
         CorrectCount = 0;
     }
 
-    public IssueEntity() { }
+    public QuestionEntity() { }
 
     public string Sentence { get; set; }
     public int ResultCount { get; set; }

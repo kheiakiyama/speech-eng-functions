@@ -1,5 +1,5 @@
 #r "System.Configuration"
-#load "../IssueEntity.csx"
+#load "../QuestionEntity.csx"
 
 using System.Net;
 using System.Net.Http;
@@ -32,12 +32,12 @@ private static async Task<HttpResponseMessage> Get(HttpRequestMessage req, Trace
     CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["speechengfunction_STORAGE"]);
     CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
     CloudTable table = tableClient.GetTableReference("sentences");
-    TableOperation retrieveOperation = TableOperation.Retrieve<IssueEntity>("speech-eng", id);
+    TableOperation retrieveOperation = TableOperation.Retrieve<QuestionEntity>("speech-eng", id);
     TableResult retrievedResult = table.Execute(retrieveOperation);
     if (retrievedResult.Result == null)
         return req.CreateResponse(HttpStatusCode.InternalServerError, "This is a bug, maybe..");
     
-    var issue = ((IssueEntity)retrievedResult.Result);
+    var issue = ((QuestionEntity)retrievedResult.Result);
     log.Info(issue.RowKey);
     return req.CreateResponse(HttpStatusCode.OK, new { 
         sentence = issue.Sentence,
