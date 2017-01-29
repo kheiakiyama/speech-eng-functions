@@ -56,5 +56,6 @@ private static string[] DivideSentence(string content, TraceWriter log)
     return document
         .AsEnumerable()
         .Where(q => q.Block != null || q.Inline != null)
-        .Select(q => q.Block != null ? q.Block.StringContent.ToString() : q.Inline.LiteralContent);
+        .Select(q => q.Block != null ? q.Block.StringContent.ToString() : q.Inline.LiteralContent)
+        .ToArray();
 }
