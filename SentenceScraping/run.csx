@@ -13,17 +13,9 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using LinqToTwitter;
 
-public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter log)
+public static async Task Run(TimerInfo myTimer, TraceWriter log)
 {
     log.Info("ResultCount function processed a request.");
-    if (req.Method == HttpMethod.Post)
-        return await Post(req, log);
-    else
-        return req.CreateResponse(HttpStatusCode.InternalServerError, "Not implimentation");
-}
-
-private static async Task<HttpResponseMessage> Post(HttpRequestMessage req, TraceWriter log)
-{
     var auth = new LinqToTwitter.SingleUserAuthorizer
     {
         CredentialStore = new LinqToTwitter.SingleUserInMemoryCredentialStore
