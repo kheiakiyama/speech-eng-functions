@@ -38,8 +38,6 @@ public static async Task Run(TimerInfo myTimer, TraceWriter log)
         };
         entity.Insert();
     }
-    return req.CreateResponse(HttpStatusCode.OK, new {
-    });
 }
 
 private static async Task<Dictionary<ulong, string>> EigoMeigen_bot(TwitterContext context)
