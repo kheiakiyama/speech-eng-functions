@@ -5,15 +5,7 @@
       "name": "req",
       "type": "timerTrigger",
       "schedule": "0 1 * * * *",
-      "direction": "in",
-      "methods": [
-        "post"
-      ]
-    },
-    {
-      "name": "$return",
-      "type": "http",
-      "direction": "out"
+      "direction": "in"
     }
   ],
   "disabled": false
