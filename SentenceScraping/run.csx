@@ -4,6 +4,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Configuration;
+using System.Linq;
 using Newtonsoft.Json;
 using Microsoft.Azure;
 using Microsoft.WindowsAzure.Storage;
