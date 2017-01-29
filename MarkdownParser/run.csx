@@ -52,7 +52,7 @@ private static async Task<HttpResponseMessage> Post(HttpRequestMessage req, Trac
 
 private static string[] DivideSentence(string content, TraceWriter log)
 {
-    var document = CommonMarkConverter.Convert(content);
+    var document = CommonMarkConverter.Parse(content);
     return document
         .AsEnumerable()
         .Where(q => q.Block != null || q.Inline != null)
