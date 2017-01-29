@@ -1,3 +1,4 @@
+using System.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 
@@ -39,14 +40,14 @@ public class QuestionEntity : TableEntity
     public void Replace()
     {
         CloudTable table = GetTable();
-        TableOperation updateOperation = TableOperation.Replace(question);
+        TableOperation updateOperation = TableOperation.Replace(this);
         table.Execute(updateOperation);
     }
 
     public void Insert()
     {
         CloudTable table = GetTable();
-        TableOperation insertOperation = TableOperation.Insert(question);
+        TableOperation insertOperation = TableOperation.Insert(this);
         table.Execute(insertOperation);
     }
 }
