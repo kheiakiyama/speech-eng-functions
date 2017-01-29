@@ -35,7 +35,7 @@ private static async Task<HttpResponseMessage> Post(HttpRequestMessage req, Trac
         try
         {
            var content = await client.GetStringAsync(new Uri(url));
-           var sentences = DivideSentence(content);
+           var sentences = DivideSentence(content, log);
            foreach (var item in sentences)
            {
                log.Info(item);
@@ -56,5 +56,5 @@ private static string[] DivideSentence(string content, TraceWriter log)
     return document
         .AsEnumerable()
         .Where(q => q.Block != null || q.Inline != null)
-        .Select(q => q.Block != null ? q.Block.StringContent.ToString() : q.Inline.StringContent.ToString());
+        .Select(q => q.Block != null ? q.Block.StringContent.ToString() : q.Inline.LiteralContent);
 }
