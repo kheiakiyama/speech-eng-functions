@@ -15,7 +15,7 @@ using LinqToTwitter;
 
 public static async Task Run(TimerInfo myTimer, TraceWriter log)
 {
-    log.Info("ResultCount function processed a request.");
+    log.Info("function processed a request.");
     var auth = new LinqToTwitter.SingleUserAuthorizer
     {
         CredentialStore = new LinqToTwitter.SingleUserInMemoryCredentialStore
@@ -30,6 +30,7 @@ public static async Task Run(TimerInfo myTimer, TraceWriter log)
     var dic = await EigoMeigen_bot(twitter);
     foreach (var key in dic.Keys)
     {
+        log.Info(key.ToString());
         var existEntity = QuestionEntity.GetEntity(key.ToString());
         if (existEntity != null)
             continue;
@@ -47,7 +48,7 @@ private static async Task<Dictionary<ulong, string>> EigoMeigen_bot(TwitterConte
         .ToListAsync();
     Dictionary<ulong, string> dic = new Dictionary<ulong, string>();
     tweets.ForEach((obj) => {
-        var english = obj.Text.Split(new string[] { "¥n" }, StringSplitOptions.None).FirstOrDefault();
+        var english = obj.Text.Split(new string[] { "¥r¥n", "¥n" }, StringSplitOptions.None).FirstOrDefault();
         dic.Add(obj.StatusID, english);
     });
     return dic;
