@@ -2,7 +2,7 @@
   "bindings": [
     {
       "authLevel": "anonymous",
-      "name": "req",
+      "name": "myTimer",
       "type": "timerTrigger",
       "schedule": "0 1 * * * *",
       "direction": "in"
