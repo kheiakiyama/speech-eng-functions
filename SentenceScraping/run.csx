@@ -1,4 +1,5 @@
 #r "System.Configuration"
+#r "System.Collections"
 #r "System.Linq.Expressions"
 #load "../QuestionEntity.csx"
 
