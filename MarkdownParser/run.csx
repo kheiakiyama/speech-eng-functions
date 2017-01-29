@@ -50,11 +50,11 @@ private static async Task<HttpResponseMessage> Post(HttpRequestMessage req, Trac
     });
 }
 
-private static async Task<string[]> DivideSentence(string content, TraceWriter log)
+private static string[] DivideSentence(string content, TraceWriter log)
 {
-    var markdown = CommonMarkConverter.Convert(content);
+    var document = CommonMarkConverter.Convert(content);
     return document
         .AsEnumerable()
-        .Where(q.Block != null || q.Inline != null)
+        .Where(q => q.Block != null || q.Inline != null)
         .Select(q => q.Block != null ? q.Block.StringContent.ToString() : q.Inline.StringContent.ToString());
 }
