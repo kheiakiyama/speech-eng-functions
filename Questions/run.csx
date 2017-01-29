@@ -30,16 +30,10 @@ private static async Task<HttpResponseMessage> Get(HttpRequestMessage req, Trace
     id = id ?? data?.id;
     if (id == null)
         return req.CreateResponse(HttpStatusCode.BadRequest, "Please pass a id on the query string or in the request body");
-    
-    CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["speechengfunction_STORAGE"]);
-    CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
-    CloudTable table = tableClient.GetTableReference("sentences");
-    TableOperation retrieveOperation = TableOperation.Retrieve<QuestionEntity>("speech-eng", id);
-    TableResult retrievedResult = table.Execute(retrieveOperation);
-    if (retrievedResult.Result == null)
+
+    var question = QuestionEntity.GetEntity(id);
+    if (question == null)
         return req.CreateResponse(HttpStatusCode.InternalServerError, "This is a bug, maybe..");
-    
-    var question = ((QuestionEntity)retrievedResult.Result);
     log.Info(question.RowKey);
     return req.CreateResponse(HttpStatusCode.OK, new { 
         sentence = question.Sentence,
@@ -63,21 +57,15 @@ private static async Task<HttpResponseMessage> Post(HttpRequestMessage req, Trac
     if (id == null || sentence == null)
         return req.CreateResponse(HttpStatusCode.BadRequest, "Please pass a id and sentence on the query string or in the request body");
     
-    CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["speechengfunction_STORAGE"]);
-    CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
-    CloudTable table = tableClient.GetTableReference("sentences");
-    TableOperation retrieveOperation = TableOperation.Retrieve<QuestionEntity>("speech-eng", id);
-    TableResult retrievedResult = table.Execute(retrieveOperation);
-    if (retrievedResult.Result == null)
+    var question = QuestionEntity.GetEntity(id);
+    if (question == null)
         return req.CreateResponse(HttpStatusCode.InternalServerError, "This is a bug, maybe..");
     
-    var question = ((QuestionEntity)retrievedResult.Result);
     log.Info(question.RowKey);
     question.ResultCount = question.ResultCount + 1;
     if (question.Sentence == sentence)
         question.CorrectCount = question.CorrectCount + 1;
-    TableOperation updateOperation = TableOperation.Replace(question);
-    table.Execute(updateOperation);
+    question.Replace();
     return req.CreateResponse(HttpStatusCode.OK, new {
     });
 }

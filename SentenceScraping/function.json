@@ -3,7 +3,8 @@
     {
       "authLevel": "anonymous",
       "name": "req",
-      "type": "httpTrigger",
+      "type": "timerTrigger",
+      "schedule": "0 1 * * * *",
       "direction": "in",
       "methods": [
         "post"

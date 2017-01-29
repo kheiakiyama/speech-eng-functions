@@ -4,7 +4,7 @@
      "dependencies": {
        "WindowsAzure.Storage": "8.0.1",
        "Microsoft.WindowsAzure.ConfigurationManager": "3.2.3",
-       "CommonMark.NET": "0.14.0"
+       "linqtotwitter": "4.1.0"
      }
    }
  }
