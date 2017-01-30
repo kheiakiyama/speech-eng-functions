@@ -51,6 +51,7 @@ private static async Task<Dictionary<ulong, string>> EigoMeigen_bot(TwitterConte
         log.Info(obj.Text);
         var english = obj.Text.Split(new string[] { "¥r¥n", "¥n" }, StringSplitOptions.None).FirstOrDefault();
         dic.Add(obj.StatusID, english);
+        log.Info(english);
     });
     return dic;
 }
