@@ -27,7 +27,7 @@ public static async Task Run(TimerInfo myTimer, TraceWriter log)
         }
     };
     var twitter = new TwitterContext(auth);
-    var dic = await EigoMeigen_bot(twitter);
+    var dic = await EigoMeigen_bot(twitter, log);
     foreach (var key in dic.Keys)
     {
         log.Info(key.ToString());
@@ -41,13 +41,14 @@ public static async Task Run(TimerInfo myTimer, TraceWriter log)
     }
 }
 
-private static async Task<Dictionary<ulong, string>> EigoMeigen_bot(TwitterContext context)
+private static async Task<Dictionary<ulong, string>> EigoMeigen_bot(TwitterContext context, TraceWriter log)
 {
     var tweets = await context.Status
         .Where(tweet => tweet.Type == StatusType.User && tweet.ScreenName == "EigoMeigen_bot")
         .ToListAsync();
     Dictionary<ulong, string> dic = new Dictionary<ulong, string>();
     tweets.ForEach((obj) => {
+        log.Info(obj.Text);
         var english = obj.Text.Split(new string[] { "¥r¥n", "¥n" }, StringSplitOptions.None).FirstOrDefault();
         dic.Add(obj.StatusID, english);
     });
