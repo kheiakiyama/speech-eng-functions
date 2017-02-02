@@ -18,6 +18,14 @@ public class QuestionEntity : TableEntity
     public int ResultCount { get; set; }
     public int CorrectCount { get; set; }
 
+    public static QuestionEntity GetEntity(string id)
+    {
+        CloudTable table = GetTable();
+        TableOperation retrieveOperation = TableOperation.Retrieve<QuestionEntity>("speech-eng", id);
+        TableResult retrievedResult = table.Execute(retrieveOperation);
+        return (QuestionEntity)retrievedResult.Result;
+    }
+
     public static QuestionEntity GetEntity(DateTime time)
     {
         CloudTable table = GetTable();
