@@ -26,8 +26,9 @@ public class QuestionEntity : TableEntity
         return (QuestionEntity)retrievedResult.Result;
     }
 
-    public static QuestionEntity GetEntity(DateTime time)
+    public static QuestionEntity GetEntity(DateTime time, TraceWriter log)
     {
+        log.Info($"time:{time.ToString()}");
         CloudTable table = GetTable();
         TableQuery<QuestionEntity> query = new TableQuery<QuestionEntity>().Where(
             TableQuery.CombineFilters(
@@ -37,14 +38,20 @@ public class QuestionEntity : TableEntity
         query.TakeCount = 1;
         var entity = table.ExecuteQuery(query).FirstOrDefault();
         if (entity != null)
+        {
+            log.Info($"EntityTime:{entity.Timestamp.ToString()}");
             return (QuestionEntity)entity;
+        }
 
         query = new TableQuery<QuestionEntity>().Where(
                 TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "speech-eng"));
         query.TakeCount = 1;
         entity = table.ExecuteQuery(query).FirstOrDefault();
         if (entity != null)
+        {
+            log.Info($"Entity2Time:{entity.Timestamp.ToString()}");
             return (QuestionEntity)entity;
+        }
 
         return null;
     }

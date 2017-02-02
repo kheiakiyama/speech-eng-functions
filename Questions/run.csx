@@ -11,7 +11,6 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter log)
 {
-    log.Info("ResultCount function processed a request.");
     if (req.Method == HttpMethod.Get)
         return await Get(req, log);
     else if (req.Method == HttpMethod.Post)
@@ -39,7 +38,6 @@ private static async Task<HttpResponseMessage> Get(HttpRequestMessage req, Trace
     if (question == null)
         return req.CreateResponse(HttpStatusCode.InternalServerError, "This is a bug, maybe..");
     
-    log.Info(question.RowKey);
     return req.CreateResponse(HttpStatusCode.OK, new { 
         sentence = question.Sentence,
         total = question.ResultCount,
@@ -67,7 +65,6 @@ private static async Task<HttpResponseMessage> Post(HttpRequestMessage req, Trac
     if (question == null)
         return req.CreateResponse(HttpStatusCode.InternalServerError, "This is a bug, maybe..");
     
-    log.Info(question.RowKey);
     question.ResultCount = question.ResultCount + 1;
     if (question.Sentence == sentence)
         question.CorrectCount = question.CorrectCount + 1;
