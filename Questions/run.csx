@@ -38,6 +38,7 @@ private static async Task<HttpResponseMessage> Get(HttpRequestMessage req, Trace
     var question = QuestionEntity.GetEntity(time);
     if (question == null)
         return req.CreateResponse(HttpStatusCode.InternalServerError, "This is a bug, maybe..");
+    
     log.Info(question.RowKey);
     return req.CreateResponse(HttpStatusCode.OK, new { 
         sentence = question.Sentence,
