@@ -30,8 +30,12 @@ private static async Task<HttpResponseMessage> Get(HttpRequestMessage req, Trace
     timeText = timeText ?? data?.id;
     if (timeText == null)
         return req.CreateResponse(HttpStatusCode.BadRequest, "Please pass time on the query string or in the request body");
+    
+    DateTime time;
+    if (!DateTime.TryParse(timeText, out time))
+        return req.CreateResponse(HttpStatusCode.BadRequest, "Please pass time on the query string or in the request body");
 
-    var question = QuestionEntity.GetEntity(timeText);
+    var question = QuestionEntity.GetEntity(time);
     if (question == null)
         return req.CreateResponse(HttpStatusCode.InternalServerError, "This is a bug, maybe..");
     log.Info(question.RowKey);
