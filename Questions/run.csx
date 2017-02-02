@@ -22,23 +22,24 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 
 private static async Task<HttpResponseMessage> Get(HttpRequestMessage req, TraceWriter log)
 {
-    string id = req.GetQueryNameValuePairs()
-        .FirstOrDefault(q => string.Compare(q.Key, "id", true) == 0)
+    string timeText = req.GetQueryNameValuePairs()
+        .FirstOrDefault(q => string.Compare(q.Key, "time", true) == 0)
         .Value;
 
     dynamic data = await req.Content.ReadAsAsync<object>();
-    id = id ?? data?.id;
-    if (id == null)
-        return req.CreateResponse(HttpStatusCode.BadRequest, "Please pass a id on the query string or in the request body");
+    timeText = timeText ?? data?.id;
+    if (timeText == null)
+        return req.CreateResponse(HttpStatusCode.BadRequest, "Please pass time on the query string or in the request body");
 
-    var question = QuestionEntity.GetEntity(id);
+    var question = QuestionEntity.GetEntity(timeText);
     if (question == null)
         return req.CreateResponse(HttpStatusCode.InternalServerError, "This is a bug, maybe..");
     log.Info(question.RowKey);
     return req.CreateResponse(HttpStatusCode.OK, new { 
         sentence = question.Sentence,
         total = question.ResultCount,
-        correct = question.CorrectCount
+        correct = question.CorrectCount,
+        time = question.Timestamp
     });
 }
 

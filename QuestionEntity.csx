@@ -18,12 +18,27 @@ public class QuestionEntity : TableEntity
     public int ResultCount { get; set; }
     public int CorrectCount { get; set; }
 
-    public static QuestionEntity GetEntity(string id)
+    public static QuestionEntity GetEntity(DateTime time)
     {
         CloudTable table = GetTable();
-        TableOperation retrieveOperation = TableOperation.Retrieve<QuestionEntity>("speech-eng", id);
-        TableResult retrievedResult = table.Execute(retrieveOperation);
-        return (QuestionEntity)retrievedResult.Result;
+        TableQuery<QuestionEntity> query = new TableQuery<QuestionEntity>().Where(
+            TableQuery.CombineFilters(
+                TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "speech-eng"),
+                TableOperators.And,
+                TableQuery.GenerateFilterConditionForDate("TimeStamp", QueryComparisons.LessThan, time)));
+        query.TakeCount = 1;
+        var entity = table.ExecuteQuery(query).FirstOrDefault();
+        if (entity != null)
+            return (QuestionEntity)entity;
+
+        query = new TableQuery<QuestionEntity>().Where(
+                TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "speech-eng"));
+        query.TakeCount = 1;
+        entity = table.ExecuteQuery(query).FirstOrDefault();
+        if (entity != null)
+            return (QuestionEntity)entity;
+
+        return null;
     }
 
     private static CloudTable tmpTable = null;
