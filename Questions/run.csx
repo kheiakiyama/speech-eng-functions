@@ -16,7 +16,7 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
     else if (req.Method == HttpMethod.Post)
         return await Post(req, log);
     else
-        return req.CreateResponse(HttpStatusCode.InternalServerError, "Not implimentation");
+        return req.CreateResponse(HttpStatusCode.InternalServerError, "Not implimentation.");
 }
 
 private static async Task<HttpResponseMessage> Get(HttpRequestMessage req, TraceWriter log)
