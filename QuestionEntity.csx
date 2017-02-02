@@ -33,7 +33,7 @@ public class QuestionEntity : TableEntity
             TableQuery.CombineFilters(
                 TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "speech-eng"),
                 TableOperators.And,
-                TableQuery.GenerateFilterConditionForDate("TimeStamp", QueryComparisons.LessThan, time)));
+                TableQuery.GenerateFilterConditionForDate("TimeStamp", QueryComparisons.GreaterThan, time)));
         query.TakeCount = 1;
         var entity = table.ExecuteQuery(query).FirstOrDefault();
         if (entity != null)
