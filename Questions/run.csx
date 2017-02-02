@@ -28,7 +28,7 @@ private static async Task<HttpResponseMessage> Get(HttpRequestMessage req, Trace
     dynamic data = await req.Content.ReadAsAsync<object>();
     timeText = timeText ?? data?.id;
     if (timeText == null)
-        return req.CreateResponse(HttpStatusCode.BadRequest, "Please pass time on the query string or in the request body");
+        return req.CreateResponse(HttpStatusCode.BadRequest, "Please pass time on the query string or in the request body.");
     
     DateTime time;
     if (!DateTime.TryParse(timeText, out time))
