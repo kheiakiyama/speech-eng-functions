@@ -34,7 +34,7 @@ private static async Task<HttpResponseMessage> Get(HttpRequestMessage req, Trace
     if (!DateTime.TryParse(timeText, out time))
         return req.CreateResponse(HttpStatusCode.BadRequest, "Parse time failed");
 
-    var question = QuestionEntity.GetEntity(time);
+    var question = QuestionEntity.GetEntity(time, log);
     if (question == null)
         return req.CreateResponse(HttpStatusCode.InternalServerError, "This is a bug, maybe..");
     
