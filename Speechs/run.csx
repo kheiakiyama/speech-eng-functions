@@ -11,7 +11,7 @@ using System.Net.Http;
 using System.Configuration;
 using System.Linq;
 using System.IO;
-using System.Threading.Tasks;
+using System.Threading;
 using Newtonsoft.Json;
 using Microsoft.Azure;
 using Microsoft.WindowsAzure.Storage;
