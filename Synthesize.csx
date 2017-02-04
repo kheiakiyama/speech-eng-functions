@@ -58,6 +58,8 @@ public enum AudioOutputFormat
     /// riff-16khz-16bit-mono-pcm request output audio format type.
     /// </summary>
     Riff16Khz16BitMonoPcm,
+    Audio16khz64kbitrateMonoMp3,
+    Audio16khz32kbitrateMonoMp3
 }
 
 /// <summary>

@@ -20,7 +20,7 @@
       "name": "outputBlob",
       "type": "blob",
       "direction": "out",
-      "path": "speechs/{queueTrigger}.wav",
+      "path": "speechs/{queueTrigger}.mp3",
       "connection": "speechengfunction_STORAGE"
     }
   ],
