@@ -16,7 +16,7 @@ using Microsoft.Azure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 
-public static async Task Run(string queueItem, 
+public static void Run(string queueItem, 
     DateTimeOffset expirationTime, 
     DateTimeOffset insertionTime, 
     DateTimeOffset nextVisibleTime,
@@ -73,7 +73,7 @@ public static async Task Run(string queueItem,
 
     cortana.OnAudioAvailable += PlayAudio;
     cortana.OnError += ErrorHandler;
-    await cortana.Speak(CancellationToken.None);
+    cortana.Speak(CancellationToken.None).Wait();
     outputBlob = speechBinary;
 }
 
