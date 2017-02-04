@@ -20,7 +20,7 @@
       "name": "outputBlob",
       "type": "blob",
       "direction": "out",
-      "path": "speechs/{queueTrigger}",
+      "path": "speechs/{queueTrigger}.pcm",
       "connection": "speechengfunction_STORAGE"
     }
   ],
