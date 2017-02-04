@@ -41,11 +41,12 @@ public static void Run(string queueItem,
     $"rowKey={entity.RowKey}");
     
     string accessToken;
+    log.Info(ConfigurationManager.AppSettings["BingSpeechKey"]);
     Authentication auth = new Authentication(ConfigurationManager.AppSettings["BingSpeechKey"]);
     try
     {
         accessToken = auth.GetAccessToken();
-        log.Info("Token: {0}\n", accessToken);
+        log.Info($"Token: {accessToken}");
     }
     catch (Exception ex)
     {
