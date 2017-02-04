@@ -45,13 +45,13 @@ public static void Run(string queueItem,
     try
     {
         accessToken = auth.GetAccessToken();
-        Console.WriteLine("Token: {0}\n", accessToken);
+        log.Info("Token: {0}\n", accessToken);
     }
     catch (Exception ex)
     {
-        Console.WriteLine("Failed authentication.");
-        Console.WriteLine(ex.ToString());
-        Console.WriteLine(ex.Message);
+        log.Info("Failed authentication.");
+        log.Info(ex.ToString());
+        log.Info(ex.Message);
         outputBlob = "";
         return;
     }
@@ -75,6 +75,7 @@ public static void Run(string queueItem,
     cortana.OnAudioAvailable += PlayAudio;
     cortana.OnError += ErrorHandler;
     cortana.Speak(CancellationToken.None).Wait();
+    log.Info(speechBinary);
     outputBlob = speechBinary;
 }
 
