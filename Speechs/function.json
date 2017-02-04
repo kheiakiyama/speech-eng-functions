@@ -2,7 +2,7 @@
   "bindings": [
     {
       "name" : "queueItem",
-      "queueName" : "Speech",
+      "queueName" : "speech",
       "connection" : "speechengfunction_STORAGE",
       "type" : "queueTrigger",
       "direction" : "in"
