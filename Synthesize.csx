@@ -258,6 +258,12 @@ public class Synthesize
                     case AudioOutputFormat.Riff8Khz8BitMonoMULaw:
                         outputFormat = "riff-8khz-8bit-mono-mulaw";
                         break;
+                    case AudioOutputFormat.Audio16khz64kbitrateMonoMp3:
+                        outputFormat = "audio-16khz-64kbitrate-mono-mp3";
+                        break;
+                    case AudioOutputFormat.Audio16khz32kbitrateMonoMp3:
+                        outputFormat = "audio-16khz-32kbitrate-mono-mp3";
+                        break;
                     default:
                         outputFormat = "riff-16khz-16bit-mono-pcm";
                         break;
