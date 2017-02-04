@@ -16,7 +16,7 @@ using Microsoft.Azure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 
-public static Task Run(string queueItem, 
+public static async Task Run(string queueItem, 
     DateTimeOffset expirationTime, 
     DateTimeOffset insertionTime, 
     DateTimeOffset nextVisibleTime,
@@ -38,7 +38,8 @@ public static Task Run(string queueItem,
     $"popReceipt={popReceipt}\n" + 
     $"dequeueCount={dequeueCount}\n" + 
     $"rowKey={entity.RowKey}");
-
+    
+    string accessToken;
     Authentication auth = new Authentication(ConfigurationManager.AppSettings["BingSpeechKey"]);
     try
     {
@@ -50,6 +51,7 @@ public static Task Run(string queueItem,
         Console.WriteLine("Failed authentication.");
         Console.WriteLine(ex.ToString());
         Console.WriteLine(ex.Message);
+        outputBlob = "";
         return;
     }
     string requestUri = "https://speech.platform.bing.com/synthesize";
