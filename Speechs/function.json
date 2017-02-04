@@ -1,0 +1,29 @@
+{
+  "bindings": [
+    {
+      "name" : "queueItem",
+      "queueName" : "Speech",
+      "connection" : "speechengfunction_STORAGE",
+      "accessRights" : "manage",
+      "type" : "serviceBusTrigger",
+      "direction" : "in"
+    },
+    {
+      "name": "entity",
+      "type": "table",
+      "direction": "in",
+      "tableName": "sentences",
+      "partitionKey": "partitionKey",
+      "rowKey": "{queueTrigger}",
+      "connection": "speechengfunction_STORAGE"
+    },
+    {
+      "name": "outputBlob",
+      "type": "blob",
+      "direction": "out",
+      "path": "speechs/{queueTrigger}",
+      "connection": "speechengfunction_STORAGE"
+    }
+  ],
+  "disabled": false
+}
