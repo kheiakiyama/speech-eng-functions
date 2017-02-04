@@ -69,7 +69,7 @@ public static void Run(string queueItem,
         // voices that the TTS service can output.
         VoiceName = "Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)",
         // Service can return audio in different output format. 
-        OutputFormat = AudioOutputFormat.Audio16khz64kbitrateMonoMp3,
+        OutputFormat = AudioOutputFormat.Audio16khz32kbitrateMonoMp3,
         AuthorizationToken = "Bearer " + accessToken,
     });
 
