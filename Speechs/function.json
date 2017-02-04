@@ -4,8 +4,7 @@
       "name" : "queueItem",
       "queueName" : "Speech",
       "connection" : "speechengfunction_STORAGE",
-      "accessRights" : "manage",
-      "type" : "serviceBusTrigger",
+      "type" : "queueTrigger",
       "direction" : "in"
     },
     {
@@ -13,7 +12,7 @@
       "type": "table",
       "direction": "in",
       "tableName": "sentences",
-      "partitionKey": "partitionKey",
+      "partitionKey": "speech-eng",
       "rowKey": "{queueTrigger}",
       "connection": "speechengfunction_STORAGE"
     },
