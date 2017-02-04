@@ -75,7 +75,7 @@ public static void Run(string queueItem,
     cortana.OnAudioAvailable += PlayAudio;
     cortana.OnError += ErrorHandler;
     cortana.Speak(CancellationToken.None).Wait();
-    log.Info(speechBinary.Length);
+    log.Info(speechBinary.Length.ToString());
     outputBlob = speechBinary;
 }
 
