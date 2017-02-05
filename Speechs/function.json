@@ -17,7 +17,7 @@
       "connection": "speechengfunction_STORAGE"
     },
     {
-      "name": "outputBlob",
+      "name": "$return",
       "type": "blob",
       "direction": "out",
       "path": "speechs/{queueTrigger}.wav",

@@ -17,7 +17,7 @@ using Microsoft.Azure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 
-public static void Run(string queueItem, 
+public static Task<Stream> Run(string queueItem, 
     DateTimeOffset expirationTime, 
     DateTimeOffset insertionTime, 
     DateTimeOffset nextVisibleTime,
@@ -25,8 +25,7 @@ public static void Run(string queueItem,
     string id,
     string popReceipt,
     int dequeueCount,
-    QuestionEntity entity, 
-    out Stream outputBlob, 
+    QuestionEntity entity,
     TraceWriter log)
 {
     speechBinary = null;
@@ -53,8 +52,7 @@ public static void Run(string queueItem,
         log.Info("Failed authentication.");
         log.Info(ex.ToString());
         log.Info(ex.Message);
-        outputBlob = null;
-        return;
+        return null;
     }
     string requestUri = "https://speech.platform.bing.com/synthesize";
     var cortana = new Synthesize(new Synthesize.InputOptions()
@@ -75,9 +73,9 @@ public static void Run(string queueItem,
 
     cortana.OnAudioAvailable += PlayAudio;
     cortana.OnError += ErrorHandler;
-    cortana.Speak(CancellationToken.None).Wait();
+    await cortana.Speak(CancellationToken.None);
     log.Info(speechBinary.Length.ToString());
-    outputBlob = speechBinary;
+    return speechBinary;
 }
 
 private static Stream speechBinary = null;

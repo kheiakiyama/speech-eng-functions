@@ -117,7 +117,7 @@ public class Synthesize
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A Task</returns>
-    public Task Speak(CancellationToken cancellationToken)
+    public async Task Speak(CancellationToken cancellationToken)
     {
         var cookieContainer = new CookieContainer();
         var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
@@ -178,7 +178,7 @@ public class Synthesize
         TaskContinuationOptions.AttachedToParent,
         cancellationToken);
 
-        return saveTask;
+        return await saveTask;
     }
 
     /// <summary>
