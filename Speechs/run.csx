@@ -58,15 +58,10 @@ public static async Task<Stream> Run(string queueItem,
     var cortana = new Synthesize(new Synthesize.InputOptions()
     {
         RequestUri = new Uri(requestUri),
-        // Text to be spoken.
         Text = entity.Sentence,
         VoiceType = Gender.Female,
-        // Refer to the documentation for complete list of supported locales.
         Locale = "en-US",
-        // You can also customize the output voice. Refer to the documentation to view the different
-        // voices that the TTS service can output.
         VoiceName = "Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)",
-        // Service can return audio in different output format. 
         OutputFormat = AudioOutputFormat.Riff16Khz16BitMonoPcm,
         AuthorizationToken = "Bearer " + accessToken,
     });

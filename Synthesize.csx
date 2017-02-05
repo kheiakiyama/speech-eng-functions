@@ -178,7 +178,7 @@ public class Synthesize
         TaskContinuationOptions.AttachedToParent,
         cancellationToken);
 
-        return await saveTask;
+        await saveTask;
     }
 
     /// <summary>
