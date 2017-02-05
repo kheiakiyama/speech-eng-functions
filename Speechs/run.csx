@@ -26,10 +26,10 @@ public static void Run(string queueItem,
     string popReceipt,
     int dequeueCount,
     QuestionEntity entity, 
-    out string outputBlob, 
+    out Stream outputBlob, 
     TraceWriter log)
 {
-    speechBinary = "";
+    speechBinary = null;
     log.Info($"C# Queue trigger function processed: {queueItem}\n" +
     $"queueTrigger={queueTrigger}\n" +
     $"expirationTime={expirationTime}\n" +
@@ -53,7 +53,7 @@ public static void Run(string queueItem,
         log.Info("Failed authentication.");
         log.Info(ex.ToString());
         log.Info(ex.Message);
-        outputBlob = "";
+        outputBlob = null;
         return;
     }
     string requestUri = "https://speech.platform.bing.com/synthesize";
@@ -80,7 +80,7 @@ public static void Run(string queueItem,
     outputBlob = speechBinary;
 }
 
-private static string speechBinary = "";
+private static Stream speechBinary = null;
 
 private static void ErrorHandler(object sender, GenericEventArgs<Exception> e)
 {
@@ -89,9 +89,5 @@ private static void ErrorHandler(object sender, GenericEventArgs<Exception> e)
 
 private static void PlayAudio(object sender, GenericEventArgs<Stream> args)
 {
-    using (StreamReader sr = new StreamReader(args.EventData))
-    {
-        speechBinary = sr.ReadToEnd();
-    }
-    args.EventData.Dispose();
+    speechBinary = args.EventData;
 }
