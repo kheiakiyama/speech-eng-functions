@@ -34,12 +34,16 @@ public static async Task Run(
     var dic = await EigoMeigen_bot(twitter, log);
     foreach (var key in dic.Keys)
     {
-        log.Info(key.ToString());
+        var keyText = key.ToString();
+        log.Info(keyText);
+        var existEntity = QuestionEntity.GetEntity(keyText);
+        if (existEntity != null)
+            continue;
         var entity = new QuestionEntity(key) {
             Sentence = dic[key],
         };
         await tableBinding.AddAsync(entity);
-        await queueBinding.AddAsync(key.ToString());
+        await queueBinding.AddAsync(keyText);
     }
 }
 
