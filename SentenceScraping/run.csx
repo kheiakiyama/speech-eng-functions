@@ -13,7 +13,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using LinqToTwitter;
 
-public static async Task Run(TimerInfo myTimer, TraceWriter log)
+public static async Task Run(TimerInfo myTimer, IAsyncCollector<string> queueBinding, IAsyncCollector<QuestionEntity> tableBinding, TraceWriter log)
 {
     log.Info("function processed a request.");
     var auth = new LinqToTwitter.SingleUserAuthorizer
@@ -31,13 +31,10 @@ public static async Task Run(TimerInfo myTimer, TraceWriter log)
     foreach (var key in dic.Keys)
     {
         log.Info(key.ToString());
-        var existEntity = QuestionEntity.GetEntity(key.ToString());
-        if (existEntity != null)
-            continue;
         var entity = new QuestionEntity(key) {
             Sentence = dic[key],
         };
-        entity.Insert();
+        tableBinding.AddAsync(entity);
     }
 }
 

@@ -6,6 +6,20 @@
       "type": "timerTrigger",
       "schedule": "0 1 * * * *",
       "direction": "in"
+    },
+    {
+      "name": "tableBinding",
+      "tableName": "sentences",
+      "type": "table",
+      "direction": "out",
+      "connection": "speechengfunction_STORAGE"
+    },
+    {
+      "name": "queueBinding",
+      "queueName": "speech",
+      "type": "queue",
+      "direction": "out",
+      "connection": "speechengfunction_STORAGE"
     }
   ],
   "disabled": false
