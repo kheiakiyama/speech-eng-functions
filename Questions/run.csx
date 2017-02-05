@@ -38,7 +38,8 @@ private static async Task<HttpResponseMessage> Get(HttpRequestMessage req, Trace
     if (question == null)
         return req.CreateResponse(HttpStatusCode.InternalServerError, "This is a bug, maybe..");
     
-    return req.CreateResponse(HttpStatusCode.OK, new { 
+    return req.CreateResponse(HttpStatusCode.OK, new {
+        id = question.RowKey,
         sentence = question.Sentence,
         total = question.ResultCount,
         correct = question.CorrectCount,
