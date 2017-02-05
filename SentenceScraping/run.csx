@@ -39,7 +39,7 @@ public static async Task Run(
             Sentence = dic[key],
         };
         await tableBinding.AddAsync(entity);
-        await queueBinding.AddAsync(key);
+        await queueBinding.AddAsync(key.ToString());
     }
 }
 
