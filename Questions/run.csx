@@ -42,6 +42,7 @@ private static async Task<HttpResponseMessage> Get(HttpRequestMessage req, Trace
         sentence = question.Sentence,
         total = question.ResultCount,
         correct = question.CorrectCount,
+        url = $"https://speechengfunction.blob.core.windows.net/speechs/{question.RowKey}.wav",
         time = question.Timestamp
     });
 }
