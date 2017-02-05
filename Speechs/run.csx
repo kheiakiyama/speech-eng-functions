@@ -72,12 +72,13 @@ public static async Task Run(string queueItem,
     cortana.OnError += ErrorHandler;
     await cortana.Speak(CancellationToken.None);
     log.Info(speechBinary.Length.ToString());
-    using (MemoryStream ms = new MemoryStream())
+    int count = 0;
+    do
     {
-        speechBinary.CopyTo(ms);
-        var byteArray = ms.ToArray();
-        await outBlob.WriteAsync(byteArray, 0, byteArray.Length);
-    }
+        byte[] buf = new byte[1024];
+        count = speechBinary.Read(buf, 0, 1024);
+        await outBlob.WriteAsync(buf, 0, count);
+    } while(speechBinary.CanRead && count > 0);
 }
 
 private static Stream speechBinary = null;
