@@ -13,7 +13,11 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using LinqToTwitter;
 
-public static async Task Run(TimerInfo myTimer, IAsyncCollector<string> queueBinding, IAsyncCollector<QuestionEntity> tableBinding, TraceWriter log)
+public static async Task Run(
+    TimerInfo myTimer, 
+    IAsyncCollector<string> queueBinding, 
+    IAsyncCollector<QuestionEntity> tableBinding, 
+    TraceWriter log)
 {
     log.Info("function processed a request.");
     var auth = new LinqToTwitter.SingleUserAuthorizer
@@ -34,7 +38,8 @@ public static async Task Run(TimerInfo myTimer, IAsyncCollector<string> queueBin
         var entity = new QuestionEntity(key) {
             Sentence = dic[key],
         };
-        tableBinding.AddAsync(entity);
+        await tableBinding.AddAsync(entity);
+        await queueBinding.AddAsync(key);
     }
 }
 
