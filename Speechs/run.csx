@@ -71,7 +71,7 @@ public static async Task Run(string queueItem,
     cortana.OnAudioAvailable += PlayAudio;
     cortana.OnError += ErrorHandler;
     await cortana.Speak(CancellationToken.None);
-    log.Info(speechBinary.Length.ToString());
+    //log.Info(speechBinary.Length.ToString());
     int count = 0;
     do
     {
