@@ -60,7 +60,7 @@ public class QuestionEntity : TableEntity
     {
         var random = new Random();
         var index = random.Next(entities.Length);
-        return entities[index];
+        return index < entities.Length ? entities[index] : null;
     }
 
     private static CloudTable tmpTable = null;
