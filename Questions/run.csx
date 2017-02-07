@@ -96,7 +96,9 @@ private static double calculate(string text1, string text2, TraceWriter log)
 
 private static string[] breakUp(string text, TraceWriter log)
 {
-    var mecab = MeCabTagger.Create();
+    MeCabParam param = new MeCabParam();
+    param.DicDir = ConfigurationManager.AppSettings["MeCabDicDir"];
+    var mecab = MeCabTagger.Create(param);
     var node = mecab.ParseToNode(text);
     var ret = new List<string>();
     while (node != null)
