@@ -69,7 +69,7 @@ private static async Task<HttpResponseMessage> Post(HttpRequestMessage req, Trac
     
     var question = QuestionEntity.GetEntity(id);
     if (question == null)
-        return req.CreateResponse(HttpStatusCode.InternalServerError, "This is a bug, maybe..");
+        return req.CreateResponse(HttpStatusCode.InternalServerError, "This is a bug, maybe...");
     
     question.ResultCount = question.ResultCount + 1;
     var cos = calculate(question.Sentence, sentence, log);

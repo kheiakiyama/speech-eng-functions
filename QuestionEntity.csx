@@ -36,7 +36,7 @@ public class QuestionEntity : TableEntity
                 TableOperators.And,
                 TableQuery.GenerateFilterConditionForDate("Timestamp", QueryComparisons.LessThan, time)));
         query.TakeCount = 20;
-        var entity = RandomChoise(table.ExecuteQuery(query));
+        var entity = RandomChoise(table.ExecuteQuery(query).ToArray());
         if (entity != null)
         {
             log.Info($"EntityTime:{entity.Timestamp.ToString()}");
@@ -46,7 +46,7 @@ public class QuestionEntity : TableEntity
         query = new TableQuery<QuestionEntity>().Where(
                 TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "speech-eng"));
         query.TakeCount = 20;
-        entity = RandomChoise(table.ExecuteQuery(query));
+        entity = RandomChoise(table.ExecuteQuery(query).ToArray());
         if (entity != null)
         {
             log.Info($"Entity2Time:{entity.Timestamp.ToString()}");
