@@ -34,9 +34,9 @@ public class QuestionEntity : TableEntity
             TableQuery.CombineFilters(
                 TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "speech-eng"),
                 TableOperators.And,
-                TableQuery.GenerateFilterConditionForDate("Timestamp", QueryComparisons.GreaterThan, time)));
-        query.TakeCount = 1;
-        var entity = table.ExecuteQuery(query).FirstOrDefault();
+                TableQuery.GenerateFilterConditionForDate("Timestamp", QueryComparisons.LessThan, time)));
+        query.TakeCount = 20;
+        var entity = RandomChoise(table.ExecuteQuery(query));
         if (entity != null)
         {
             log.Info($"EntityTime:{entity.Timestamp.ToString()}");
@@ -45,8 +45,8 @@ public class QuestionEntity : TableEntity
 
         query = new TableQuery<QuestionEntity>().Where(
                 TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "speech-eng"));
-        query.TakeCount = 1;
-        entity = table.ExecuteQuery(query).FirstOrDefault();
+        query.TakeCount = 20;
+        entity = RandomChoise(table.ExecuteQuery(query));
         if (entity != null)
         {
             log.Info($"Entity2Time:{entity.Timestamp.ToString()}");
@@ -54,6 +54,13 @@ public class QuestionEntity : TableEntity
         }
 
         return null;
+    }
+
+    private static QuestionEntity RandomChoise(QuestionEntity[] entities)
+    {
+        var random = new Random();
+        var index = random.Next(entities.Length);
+        return entities[index];
     }
 
     private static CloudTable tmpTable = null;

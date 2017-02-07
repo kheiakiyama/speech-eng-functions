@@ -80,15 +80,15 @@ private static async Task<HttpResponseMessage> Post(HttpRequestMessage req, Trac
     if (cos > perfect)
     {
         question.CorrectCount = question.CorrectCount + 1;
-        comment = "PERFECT";
+        comment = "PERFECT!!";
     }    
     else if (cos > good)
     {
         question.CorrectCount = question.CorrectCount + 1;
-        comment = "GOOD";
+        comment = "GOOD!";
     }
     else
-        comment = "OOPS";
+        comment = "OOPS...";
     question.Replace();
     return req.CreateResponse(HttpStatusCode.OK, new {
         cos = cos,
