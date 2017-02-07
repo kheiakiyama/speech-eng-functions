@@ -104,7 +104,7 @@ private static string[] breakUp(string text, TraceWriter log)
     while (node != null)
     {
         ret.Add(node.Surface);
-        log.Info(node.Surface + " - " + node.Feature);
+       // log.Info(node.Surface + " - " + node.Feature);
         node = node.Next;
     }
     return ret.ToArray();
