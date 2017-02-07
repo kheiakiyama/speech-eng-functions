@@ -3,7 +3,8 @@
    "net46":{
      "dependencies": {
        "WindowsAzure.Storage": "8.0.1",
-       "Microsoft.WindowsAzure.ConfigurationManager": "3.2.3"
+       "Microsoft.WindowsAzure.ConfigurationManager": "3.2.3",
+       "NMeCab": "0.6.4"
      }
    }
  }
