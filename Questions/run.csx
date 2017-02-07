@@ -88,10 +88,10 @@ private static double calculate(string text1, string text2, TraceWriter log)
     var uniques = ar1.Concat(ar2).Distinct().ToArray();
     var flgs1 = make_flags(uniques, ar1);
     var flgs2 = make_flags(uniques, ar2);
-    var vct1 = new Vector(flgs1);
-    var vct2 = new Vector(flgs2);
+    var vct1 = new Vector<int>(flgs1);
+    var vct2 = new Vector<int>(flgs2);
 
-    return dot(vct1, vct2) / (double)vct1.Count;
+    return dot(vct1, vct2, uniques.Length) / (double)uniques.Length;
 }
 
 private static string[] breakUp(string text, TraceWriter log)
@@ -118,10 +118,10 @@ private static int[] make_flags(string[] uniques, string[] elements)
     return ret.ToArray();
 }
 
-private static int dot(int[] i1, int[] i2)
+private static int dot(int[] i1, int[] i2, int length)
 {
     var ret = 0;
-    for (var i = 0; i < i1.Length; i++)
+    for (var i = 0; i < length; i++)
         ret += i1[i] * i2[i];
     return ret;
 }
