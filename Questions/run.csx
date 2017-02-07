@@ -118,7 +118,7 @@ private static int[] make_flags(string[] uniques, string[] elements)
     return ret.ToArray();
 }
 
-private static int dot(int[] i1, int[] i2, int length)
+private static int dot(Vector<int> i1, Vector<int> i2, int length)
 {
     var ret = 0;
     for (var i = 0; i < length; i++)
