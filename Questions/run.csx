@@ -73,11 +73,26 @@ private static async Task<HttpResponseMessage> Post(HttpRequestMessage req, Trac
     
     question.ResultCount = question.ResultCount + 1;
     var cos = calculate(question.Sentence, sentence, log);
-    log.Info($"{cos}");
-    if (question.Sentence == sentence)
+    log.Info($"cos:{cos}");
+    var perfect = double.Parse(ConfigurationManager.AppSettings["BORDER_PERFECT"]);
+    var good = double.Parse(ConfigurationManager.AppSettings["BORDER_GOOD"]);
+    string comment;
+    if (cos > perfect)
+    {
         question.CorrectCount = question.CorrectCount + 1;
+        comment = "PERFECT";
+    }    
+    else if (cos > good)
+    {
+        question.CorrectCount = question.CorrectCount + 1;
+        comment = "GOOD";
+    }
+    else
+        comment = "OOPS";
     question.Replace();
     return req.CreateResponse(HttpStatusCode.OK, new {
+        cos = cos,
+        comment = comment
     });
 }
 
