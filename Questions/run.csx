@@ -1,5 +1,4 @@
 #r "System.Configuration"
-#r "System.Numerics"
 #load "../QuestionEntity.csx"
 
 using System.Net;
@@ -89,8 +88,8 @@ private static double calculate(string text1, string text2, TraceWriter log)
     var uniques = ar1.Concat(ar2).Distinct().ToArray();
     var flgs1 = make_flags(uniques, ar1);
     var flgs2 = make_flags(uniques, ar2);
-    var vct1 = new Vector(flag1);
-    var vct2 = new Vector(flag2);
+    var vct1 = new Vector(flgs1);
+    var vct2 = new Vector(flgs2);
 
     return dot(vct1, vct2) / (double)vct1.Count;
 }
