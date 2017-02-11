@@ -3,10 +3,8 @@
 using System.Net;
 using System.Net.Http;
 using System.Configuration;
-using System.Numerics;
 using System.Linq;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter log)
 {
