@@ -1,0 +1,9 @@
+{
+ "frameworks": {
+   "net46":{
+     "dependencies": {
+       "Microsoft.WindowsAzure.ConfigurationManager": "3.2.3"
+     }
+   }
+ }
+}
