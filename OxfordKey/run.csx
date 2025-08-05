@@ -11,10 +11,10 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, ILogge
     if (req.Method == HttpMethod.Get)
         return await Get(req, log);
     else
-        return req.CreateResponse(HttpStatusCode.InternalServerError, new { error = "Not implemented." });
+        return req.CreateResponse<ErrorEntity>(HttpStatusCode.InternalServerError, new ErrorEntity(){ error = "Not implemented." });
 }
 
 private static async Task<HttpResponseMessage> Get(HttpRequestMessage req, ILogger log)
 {
-    return req.CreateResponse(HttpStatusCode.OK, new { key = Environment.GetEnvironmentVariable("BingSpeechKey") });
+    return req.CreateResponse<OxfordEntity>(HttpStatusCode.OK, new OxfordEntity(){ key = Environment.GetEnvironmentVariable("BingSpeechKey") });
 }
