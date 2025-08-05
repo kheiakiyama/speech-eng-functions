@@ -5,6 +5,7 @@
 #load "../QuestionEntity.csx"
 #load "../Authentication.csx"
 #load "../Synthesize.csx"
+#r "Microsoft.Extensions.Logging"
 
 using System.Net;
 using System.Net.Http;
@@ -16,6 +17,7 @@ using Newtonsoft.Json;
 using Microsoft.Azure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
+using Microsoft.Extensions.Logging;
 
 public static async Task Run(string queueItem, 
     DateTimeOffset expirationTime, 
@@ -27,10 +29,10 @@ public static async Task Run(string queueItem,
     int dequeueCount,
     QuestionEntity entity,
     Stream outBlob,
-    TraceWriter log)
+    ILogger log)
 {
     speechBinary = null;
-    log.Info($"C# Queue trigger function processed: {queueItem}\n" +
+    log.LogInformation($"C# Queue trigger function processed: {queueItem}\n" +
     $"queueTrigger={queueTrigger}\n" +
     $"expirationTime={expirationTime}\n" +
     $"insertionTime={insertionTime}\n" +
@@ -41,18 +43,18 @@ public static async Task Run(string queueItem,
     $"rowKey={entity.RowKey}");
     
     string accessToken;
-    log.Info(ConfigurationManager.AppSettings["BingSpeechKey"]);
+    log.LogInformation(ConfigurationManager.AppSettings["BingSpeechKey"]);
     Authentication auth = new Authentication(ConfigurationManager.AppSettings["BingSpeechKey"]);
     try
     {
         accessToken = auth.GetAccessToken();
-        log.Info($"Token: {accessToken}");
+        log.LogInformation($"Token: {accessToken}");
     }
     catch (Exception ex)
     {
-        log.Info("Failed authentication.");
-        log.Info(ex.ToString());
-        log.Info(ex.Message);
+        log.LogError("Failed authentication.");
+        log.LogError(ex.ToString());
+        log.LogError(ex.Message);
         outBlob = null;
         return;
     }

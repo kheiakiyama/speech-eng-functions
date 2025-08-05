@@ -12,18 +12,19 @@ using Microsoft.Azure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using NMeCab;
+using Microsoft.Extensions.Logging;
 
-public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter log)
+public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, ILogger log)
 {
     if (req.Method == HttpMethod.Get)
         return await Get(req, log);
     else if (req.Method == HttpMethod.Post)
         return await Post(req, log);
     else
-        return req.CreateResponse(HttpStatusCode.InternalServerError, "Not implimentation.");
+        return req.CreateResponse(HttpStatusCode.InternalServerError, "Not implemented.");
 }
 
-private static async Task<HttpResponseMessage> Get(HttpRequestMessage req, TraceWriter log)
+private static async Task<HttpResponseMessage> Get(HttpRequestMessage req, ILogger log)
 {
     string timeText = req.GetQueryNameValuePairs()
         .FirstOrDefault(q => string.Compare(q.Key, "time", true) == 0)
@@ -52,7 +53,7 @@ private static async Task<HttpResponseMessage> Get(HttpRequestMessage req, Trace
     });
 }
 
-private static async Task<HttpResponseMessage> Post(HttpRequestMessage req, TraceWriter log)
+private static async Task<HttpResponseMessage> Post(HttpRequestMessage req, ILogger log)
 {
     string id = req.GetQueryNameValuePairs()
         .FirstOrDefault(q => string.Compare(q.Key, "id", true) == 0)
@@ -73,7 +74,7 @@ private static async Task<HttpResponseMessage> Post(HttpRequestMessage req, Trac
     
     question.ResultCount = question.ResultCount + 1;
     var cos = calculate(question.Sentence, sentence, log);
-    log.Info($"cos:{cos}");
+    log.LogInformation($"cos:{cos}");
     var perfect = double.Parse(ConfigurationManager.AppSettings["BORDER_PERFECT"]);
     var good = double.Parse(ConfigurationManager.AppSettings["BORDER_GOOD"]);
     string comment;
@@ -96,7 +97,7 @@ private static async Task<HttpResponseMessage> Post(HttpRequestMessage req, Trac
     });
 }
 
-private static double calculate(string text1, string text2, TraceWriter log) 
+private static double calculate(string text1, string text2, ILogger log) 
 {
     var ar1 = breakUp(text1, log);
     var ar2 = breakUp(text2, log);
@@ -106,7 +107,7 @@ private static double calculate(string text1, string text2, TraceWriter log)
     return dot(flgs1, flgs2, uniques.Length) / (double)uniques.Length;
 }
 
-private static string[] breakUp(string text, TraceWriter log)
+private static string[] breakUp(string text, ILogger log)
 {
     MeCabParam param = new MeCabParam();
     param.DicDir = ConfigurationManager.AppSettings["MeCabDicDir"];
@@ -116,7 +117,7 @@ private static string[] breakUp(string text, TraceWriter log)
     while (node != null)
     {
         ret.Add(node.Surface);
-        log.Info(node.Surface);
+        log.LogInformation(node.Surface);
         node = node.Next;
     }
     return ret.ToArray();

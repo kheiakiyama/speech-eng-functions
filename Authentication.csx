@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
+using Microsoft.Extensions.Logging;
 
 /// <summary>
 /// This class demonstrates how to get a valid O-auth token
@@ -55,7 +56,7 @@ public class Authentication
         }
         catch (Exception ex)
         {
-            Console.WriteLine(string.Format("Failed renewing access token. Details: {0}", ex.Message));
+            Console.WriteLine($"Failed renewing access token. Details: {ex.Message}");
         }
         finally
         {
@@ -65,7 +66,7 @@ public class Authentication
             }
             catch (Exception ex)
             {
-                Console.WriteLine(string.Format("Failed to reschedule the timer to renew access token. Details: {0}", ex.Message));
+                Console.WriteLine($"Failed to reschedule the timer to renew access token. Details: {ex.Message}");
             }
         }
     }
