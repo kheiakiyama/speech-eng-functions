@@ -21,7 +21,7 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, ILogge
     else if (req.Method == HttpMethod.Post)
         return await Post(req, log);
     else
-        return req.CreateResponse(HttpStatusCode.InternalServerError, "Not implemented.");
+        return req.CreateResponse(HttpStatusCode.InternalServerError, new { error = "Not implemented." });
 }
 
 private static async Task<HttpResponseMessage> Get(HttpRequestMessage req, ILogger log)
@@ -33,15 +33,15 @@ private static async Task<HttpResponseMessage> Get(HttpRequestMessage req, ILogg
     dynamic data = await req.Content.ReadAsAsync<object>();
     timeText = timeText ?? data?.id;
     if (timeText == null)
-        return req.CreateResponse(HttpStatusCode.BadRequest, "Please pass time on the query string or in the request body.");
+        return req.CreateResponse(HttpStatusCode.BadRequest, new { error = "Please pass time on the query string or in the request body." });
     
     DateTime time;
     if (!DateTime.TryParse(timeText, out time))
-        return req.CreateResponse(HttpStatusCode.BadRequest, "Parse time failed.");
+        return req.CreateResponse(HttpStatusCode.BadRequest, new { error = "Parse time failed." });
 
     var question = QuestionEntity.GetEntity(time, log);
     if (question == null)
-        return req.CreateResponse(HttpStatusCode.InternalServerError, "This is a bug, maybe...");
+        return req.CreateResponse(HttpStatusCode.InternalServerError, new { error = "This is a bug, maybe..." });
     
     return req.CreateResponse(HttpStatusCode.OK, new {
         id = question.RowKey,
@@ -66,11 +66,11 @@ private static async Task<HttpResponseMessage> Post(HttpRequestMessage req, ILog
     id = id ?? data?.id;
     sentence = sentence ?? data?.sentence;
     if (id == null || sentence == null)
-        return req.CreateResponse(HttpStatusCode.BadRequest, "Please pass a id and sentence on the query string or in the request body");
+        return req.CreateResponse(HttpStatusCode.BadRequest, new { error = "Please pass a id and sentence on the query string or in the request body" });
     
     var question = QuestionEntity.GetEntity(id);
     if (question == null)
-        return req.CreateResponse(HttpStatusCode.InternalServerError, "This is a bug, maybe...");
+        return req.CreateResponse(HttpStatusCode.InternalServerError, new { error = "This is a bug, maybe..." });
     
     question.ResultCount = question.ResultCount + 1;
     var cos = calculate(question.Sentence, sentence, log);
