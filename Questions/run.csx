@@ -1,5 +1,6 @@
 #r "System.Configuration"
 #load "../QuestionEntity.csx"
+#load "../ResultObject.csx"
 
 using System.Net;
 using System.Net.Http;

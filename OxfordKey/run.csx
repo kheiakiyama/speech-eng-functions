@@ -1,4 +1,5 @@
 #r "System.Configuration"
+#load "../ResultObject.csx"
 
 using System.Net;
 using System.Net.Http;
