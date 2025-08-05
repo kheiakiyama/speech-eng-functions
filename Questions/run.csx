@@ -15,36 +15,35 @@ using Microsoft.WindowsAzure.Storage.Table;
 using NMeCab;
 using Microsoft.Extensions.Logging;
 
-public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, ILogger log)
+public static async Task<HttpResponseMessage> Run(HttpRequestData req, FunctionContext context)
 {
-    if (req.Method == HttpMethod.Get)
+    var log = context.GetLogger("QuestionsFunction");
+    if (req.Method == "GET")
         return await Get(req, log);
-    else if (req.Method == HttpMethod.Post)
+    else if (req.Method == "POST")
         return await Post(req, log);
     else
-        return req.CreateResponse<ErrorEntity>(HttpStatusCode.InternalServerError, new ErrorEntity(){ error = "Not implemented." });
+        return req.CreateResponse(HttpStatusCode.InternalServerError, new { error = "Not implemented." });
 }
 
-private static async Task<HttpResponseMessage> Get(HttpRequestMessage req, ILogger log)
+private static async Task<HttpResponseMessage> Get(HttpRequestData req, ILogger log)
 {
-    string timeText = req.GetQueryNameValuePairs()
-        .FirstOrDefault(q => string.Compare(q.Key, "time", true) == 0)
-        .Value;
-
-    dynamic data = await req.Content.ReadAsAsync<object>();
+    string timeText = req.Query["time"];
+    dynamic data = await req.ReadFromJsonAsync<object>();
     timeText = timeText ?? data?.id;
+
     if (timeText == null)
-        return req.CreateResponse<ErrorEntity>(HttpStatusCode.BadRequest, new ErrorEntity(){ error = "Please pass time on the query string or in the request body." });
-    
-    DateTime time;
-    if (!DateTime.TryParse(timeText, out time))
-        return req.CreateResponse<ErrorEntity>(HttpStatusCode.BadRequest, new ErrorEntity(){ error = "Parse time failed." });
+        return req.CreateResponse(HttpStatusCode.BadRequest, new { error = "Please pass time on the query string or in the request body." });
+
+    if (!DateTime.TryParse(timeText, out DateTime time))
+        return req.CreateResponse(HttpStatusCode.BadRequest, new { error = "Parse time failed." });
 
     var question = QuestionEntity.GetEntity(time, log);
     if (question == null)
-        return req.CreateResponse<ErrorEntity>(HttpStatusCode.InternalServerError, new ErrorEntity(){ error = "This is a bug, maybe..." });
-    
-    return req.CreateResponse<QuestionGetEntity>(HttpStatusCode.OK, new QuestionGetEntity(){
+        return req.CreateResponse(HttpStatusCode.InternalServerError, new { error = "This is a bug, maybe..." });
+
+    return req.CreateResponse(HttpStatusCode.OK, new
+    {
         id = question.RowKey,
         sentence = question.Sentence,
         total = question.ResultCount,
@@ -54,26 +53,22 @@ private static async Task<HttpResponseMessage> Get(HttpRequestMessage req, ILogg
     });
 }
 
-private static async Task<HttpResponseMessage> Post(HttpRequestMessage req, ILogger log)
+private static async Task<HttpResponseMessage> Post(HttpRequestData req, ILogger log)
 {
-    string id = req.GetQueryNameValuePairs()
-        .FirstOrDefault(q => string.Compare(q.Key, "id", true) == 0)
-        .Value;
-    string sentence = req.GetQueryNameValuePairs()
-        .FirstOrDefault(q => string.Compare(q.Key, "sentence", true) == 0)
-        .Value;
-
-    dynamic data = await req.Content.ReadAsAsync<object>();
+    string id = req.Query["id"];
+    string sentence = req.Query["sentence"];
+    dynamic data = await req.ReadFromJsonAsync<object>();
     id = id ?? data?.id;
     sentence = sentence ?? data?.sentence;
+
     if (id == null || sentence == null)
-        return req.CreateResponse<ErrorEntity>(HttpStatusCode.BadRequest, new ErrorEntity(){ error = "Please pass a id and sentence on the query string or in the request body" });
-    
+        return req.CreateResponse(HttpStatusCode.BadRequest, new { error = "Please pass a id and sentence on the query string or in the request body." });
+
     var question = QuestionEntity.GetEntity(id);
     if (question == null)
-        return req.CreateResponse<ErrorEntity>(HttpStatusCode.InternalServerError, new ErrorEntity(){ error = "This is a bug, maybe..." });
-    
-    question.ResultCount = question.ResultCount + 1;
+        return req.CreateResponse(HttpStatusCode.InternalServerError, new { error = "This is a bug, maybe..." });
+
+    question.ResultCount += 1;
     var cos = calculate(question.Sentence, sentence, log);
     log.LogInformation($"cos:{cos}");
     var perfect = double.Parse(Environment.GetEnvironmentVariable("BORDER_PERFECT"));
@@ -81,24 +76,21 @@ private static async Task<HttpResponseMessage> Post(HttpRequestMessage req, ILog
     string comment;
     if (cos > perfect)
     {
-        question.CorrectCount = question.CorrectCount + 1;
+        question.CorrectCount += 1;
         comment = "PERFECT!!";
-    }    
+    }
     else if (cos > good)
     {
-        question.CorrectCount = question.CorrectCount + 1;
+        question.CorrectCount += 1;
         comment = "GOOD!";
     }
     else
         comment = "OOPS...";
     question.Replace();
-    return req.CreateResponse<QuestionPostEntity>(HttpStatusCode.OK, new QuestionPostEntity(){
-        cos = cos,
-        comment = comment
-    });
+    return req.CreateResponse(HttpStatusCode.OK, new { cos, comment });
 }
 
-private static double calculate(string text1, string text2, ILogger log) 
+private static double calculate(string text1, string text2, ILogger log)
 {
     var ar1 = breakUp(text1, log);
     var ar2 = breakUp(text2, log);
@@ -110,8 +102,7 @@ private static double calculate(string text1, string text2, ILogger log)
 
 private static string[] breakUp(string text, ILogger log)
 {
-    MeCabParam param = new MeCabParam();
-    param.DicDir = ConfigurationManager.AppSettings["MeCabDicDir"];
+    MeCabParam param = new MeCabParam { DicDir = Environment.GetEnvironmentVariable("MeCabDicDir") };
     var mecab = MeCabTagger.Create(param);
     var node = mecab.ParseToNode(text);
     var ret = new List<string>();
@@ -126,18 +117,10 @@ private static string[] breakUp(string text, ILogger log)
 
 private static int[] make_flags(string[] uniques, string[] elements)
 {
-    var ret = new List<int>();
-    foreach (var word in uniques)
-    {
-        ret.Add(elements.Contains(word) ? 1 : 0);
-    }
-    return ret.ToArray();
+    return uniques.Select(word => elements.Contains(word) ? 1 : 0).ToArray();
 }
 
 private static int dot(int[] i1, int[] i2, int length)
 {
-    var ret = 0;
-    for (var i = 0; i < length; i++)
-        ret += i1[i] * i2[i];
-    return ret;
+    return Enumerable.Range(0, length).Sum(i => i1[i] * i2[i]);
 }
