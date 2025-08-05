@@ -75,8 +75,8 @@ private static async Task<HttpResponseMessage> Post(HttpRequestMessage req, ILog
     question.ResultCount = question.ResultCount + 1;
     var cos = calculate(question.Sentence, sentence, log);
     log.LogInformation($"cos:{cos}");
-    var perfect = double.Parse(ConfigurationManager.AppSettings["BORDER_PERFECT"]);
-    var good = double.Parse(ConfigurationManager.AppSettings["BORDER_GOOD"]);
+    var perfect = double.Parse(Environment.GetEnvironmentVariable("BORDER_PERFECT"));
+    var good = double.Parse(Environment.GetEnvironmentVariable("BORDER_GOOD"));
     string comment;
     if (cos > perfect)
     {

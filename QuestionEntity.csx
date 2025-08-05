@@ -1,4 +1,4 @@
-using System.Configuration;
+using System;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 
@@ -69,7 +69,7 @@ public class QuestionEntity : TableEntity
     {
         if (tmpTable != null)
             return tmpTable;
-        CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["speechengfunction_STORAGE"]);
+        CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("speechengfunction_STORAGE"));
         CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
         return tmpTable = tableClient.GetTableReference("sentences");
     }

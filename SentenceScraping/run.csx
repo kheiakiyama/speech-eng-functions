@@ -24,10 +24,10 @@ public static async Task Run(
     {
         CredentialStore = new LinqToTwitter.SingleUserInMemoryCredentialStore
         {
-            ConsumerKey = ConfigurationManager.AppSettings["Twitter_ConsumerKey"],
-            ConsumerSecret = ConfigurationManager.AppSettings["Twitter_ConsumerSecret"],
-            AccessToken = ConfigurationManager.AppSettings["Twitter_AccessToken"],
-            AccessTokenSecret = ConfigurationManager.AppSettings["Twitter_AccessTokenSecret"]
+            ConsumerKey = Environment.GetEnvironmentVariable("Twitter_ConsumerKey"),
+            ConsumerSecret = Environment.GetEnvironmentVariable("Twitter_ConsumerSecret"),
+            AccessToken = Environment.GetEnvironmentVariable("Twitter_AccessToken"),
+            AccessTokenSecret = Environment.GetEnvironmentVariable("Twitter_AccessTokenSecret")
         }
     };
     var twitter = new TwitterContext(auth);

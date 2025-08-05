@@ -16,5 +16,5 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 
 private static async Task<HttpResponseMessage> Get(HttpRequestMessage req, TraceWriter log)
 {
-    return req.CreateResponse(HttpStatusCode.OK, ConfigurationManager.AppSettings["BingSpeechKey"]);
+    return req.CreateResponse(HttpStatusCode.OK, Environment.GetEnvironmentVariable("BingSpeechKey"));
 }
