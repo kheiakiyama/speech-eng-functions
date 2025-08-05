@@ -17,7 +17,7 @@ public static async Task Run(
     TimerInfo myTimer, 
     IAsyncCollector<string> queueBinding, 
     IAsyncCollector<QuestionEntity> tableBinding, 
-    TraceWriter log)
+    ILogger log)
 {
     log.Info("function processed a request.");
     var auth = new LinqToTwitter.SingleUserAuthorizer
@@ -47,7 +47,7 @@ public static async Task Run(
     }
 }
 
-private static async Task<Dictionary<ulong, string>> EigoMeigen_bot(TwitterContext context, TraceWriter log)
+private static async Task<Dictionary<ulong, string>> EigoMeigen_bot(TwitterContext context, ILogger log)
 {
     var tweets = await context.Status
         .Where(tweet => tweet.Type == StatusType.User && tweet.ScreenName == "EigoMeigen_bot")

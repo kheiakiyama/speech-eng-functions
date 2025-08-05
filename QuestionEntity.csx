@@ -26,7 +26,7 @@ public class QuestionEntity : TableEntity
         return (QuestionEntity)retrievedResult.Result;
     }
 
-    public static QuestionEntity GetEntity(DateTime time, TraceWriter log)
+    public static QuestionEntity GetEntity(DateTime time, ILogger log)
     {
         log.Info($"time:{time.ToString()}");
         CloudTable table = GetTable();
