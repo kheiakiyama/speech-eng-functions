@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "speech_eng_functions": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7157",
+      "launchBrowser": false
+    }
+  }
+}
