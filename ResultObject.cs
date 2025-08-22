@@ -6,13 +6,14 @@ using System.Text;
 using System.Threading;
 using Microsoft.Extensions.Logging;
 
+namespace SpeechEng.Functions;
 public class ErrorEntity
 {
     public string error { get; set; }
 }
 public class OxfordEntity
 {
-    public string key { get; set; }
+    public string key { get; set; } = string.Empty;
 }
 public class QuestionGetEntity
 {
