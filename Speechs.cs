@@ -21,11 +21,9 @@ public class Speechs
         [QueueTrigger("speech")] string queueItem,
         [TableInput("sentences", "speech-eng", "{queueTrigger}")] QuestionEntity entity)
     {
-        speechBinary = null;
         _logger.LogInformation($"Queue trigger function processed: {queueItem}\n" +
         $"rowKey={entity.RowKey}");
 
-        string accessToken;
         _logger.LogInformation(Environment.GetEnvironmentVariable("BingSpeechKey"));
         var speechConfig = SpeechConfig.FromSubscription(Environment.GetEnvironmentVariable("BingSpeechKey"), "en-US");
         using var speechSynthesizer = new SpeechSynthesizer(speechConfig, null);
@@ -75,6 +73,4 @@ public class Speechs
         wavStream.Position = 0;
         return new MemoryStream(wavStream.ToArray());
     }
-
-    private static Stream? speechBinary = null;
 }

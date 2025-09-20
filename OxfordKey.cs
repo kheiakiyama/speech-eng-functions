@@ -19,7 +19,7 @@ public class OxfordKey
     {
         return new OkObjectResult(new OxfordEntity
         {
-            key = Environment.GetEnvironmentVariable("BingSpeechKey")
+            Key = Environment.GetEnvironmentVariable("BingSpeechKey") ?? string.Empty
         });
     }
 }

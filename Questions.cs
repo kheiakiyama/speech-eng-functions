@@ -31,9 +31,9 @@ public class Questions
 
 private async Task<IActionResult> Get(HttpRequest req)
 {
-    string timeText = req.Query["time"];
-    dynamic data = await req.ReadFromJsonAsync<object>();
-    timeText = timeText ?? data?.id;
+    string? timeText = req.Query["time"].FirstOrDefault();
+    dynamic? data = await req.ReadFromJsonAsync<object>();
+    timeText = timeText ?? (data?.id as string);
 
     if (timeText == null)
         return new BadRequestObjectResult(new { error = "Please pass time on the query string or in the request body." });
@@ -69,9 +69,9 @@ private async Task<IActionResult> Get(HttpRequest req)
 
 private async Task<IActionResult> Post(HttpRequest req)
 {
-    string id = req.Query["id"];
-    string sentence = req.Query["sentence"];
-    dynamic data = await req.ReadFromJsonAsync<object>();
+    string? id = req.Query["id"].FirstOrDefault();
+    string? sentence = req.Query["sentence"].FirstOrDefault();
+    dynamic? data = await req.ReadFromJsonAsync<object>();
     id = id ?? data?.id;
     sentence = sentence ?? data?.sentence;
 
@@ -95,8 +95,22 @@ private async Task<IActionResult> Post(HttpRequest req)
     question.ResultCount += 1;
     var cos = calculate(question.Sentence, sentence);
     _logger.LogInformation($"cos:{cos}");
-    var perfect = double.Parse(Environment.GetEnvironmentVariable("BORDER_PERFECT"));
-    var good = double.Parse(Environment.GetEnvironmentVariable("BORDER_GOOD"));
+    var perfectStr = Environment.GetEnvironmentVariable("BORDER_PERFECT");
+    var goodStr = Environment.GetEnvironmentVariable("BORDER_GOOD");
+    if (string.IsNullOrEmpty(perfectStr) || string.IsNullOrEmpty(goodStr))
+    {
+        return new ObjectResult(new
+        {
+            Code = 500,
+            Message = "Internal Server Error",
+            ErrorMessage = "Environment variable BORDER_PERFECT or BORDER_GOOD is not set."
+        })
+        {
+            StatusCode = StatusCodes.Status500InternalServerError
+        };
+    }
+    var perfect = double.Parse(perfectStr);
+    var good = double.Parse(goodStr);
     string comment;
     if (cos > perfect)
     {

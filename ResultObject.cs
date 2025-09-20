@@ -9,23 +9,23 @@ using Microsoft.Extensions.Logging;
 namespace SpeechEng.Functions;
 public class ErrorEntity
 {
-    public string error { get; set; }
+    public string Error { get; set; } = string.Empty;
 }
 public class OxfordEntity
 {
-    public string key { get; set; } = string.Empty;
+    public string Key { get; set; } = string.Empty;
 }
 public class QuestionGetEntity
 {
-    public string id { get; set; }
-    public string sentence { get; set; }
-    public int total { get; set; }
-    public int correct { get; set; }
-    public string url { get; set; }
-    public DateTimeOffset? time { get; set; }
+    public string Id { get; set; } = string.Empty;
+    public string Sentence { get; set; } = string.Empty;
+    public int Total { get; set; } = 0;
+    public int Correct { get; set; } = 0;
+    public string Url { get; set; } = string.Empty;
+    public DateTimeOffset? Time { get; set; }
 }
 public class QuestionPostEntity
 {
-    public double cors { get; set; }
-    public string comment { get; set; }
+    public double Cos { get; set; } = 0;
+    public string Comment { get; set; } = string.Empty;
 }

@@ -13,28 +13,26 @@ public class QuestionEntity : Azure.Data.Tables.ITableEntity
     {
         this.PartitionKey = "speech-eng";
         this.RowKey = id.ToString();
-        ResultCount = 0;
-        CorrectCount = 0;
     }
 
     public QuestionEntity() { }
 
-    public string Sentence { get; set; }
-    public int ResultCount { get; set; }
-    public int CorrectCount { get; set; }
-    public string PartitionKey { get; set; }
-    public string RowKey { get; set; }
+    public string Sentence { get; set; } = "";
+    public int ResultCount { get; set; } = 0;
+    public int CorrectCount { get; set; } = 0;
+    public string PartitionKey { get; set; } = "";
+    public string RowKey { get; set; } = "";
     public DateTimeOffset? Timestamp { get; set; }
     public ETag ETag { get; set; }
 
-    public static QuestionEntity GetEntity(string id)
+    public static QuestionEntity? GetEntity(string id)
     {
         var table = GetTable();
         var entity = table.GetEntityIfExists<QuestionEntity>("speech-eng", id);
-        return entity.Value;
+        return entity.HasValue ? entity.Value : null;
     }
 
-    public static QuestionEntity GetEntity(DateTime time, ILogger<Questions> log)
+    public static QuestionEntity? GetEntity(DateTime time, ILogger<Questions> log)
     {
         log.LogInformation($"time:{time.ToString()}");
         var table = GetTable();
@@ -61,14 +59,14 @@ public class QuestionEntity : Azure.Data.Tables.ITableEntity
         return null;
     }
 
-    private static QuestionEntity RandomChoise(QuestionEntity[] entities)
+    private static QuestionEntity? RandomChoise(QuestionEntity[] entities)
     {
         var random = new Random();
         var index = random.Next(entities.Length);
         return index < entities.Length ? entities[index] : null;
     }
 
-    private static TableClient tmpTable = null;
+    private static TableClient? tmpTable = null;
 
     private static TableClient GetTable()
     {
