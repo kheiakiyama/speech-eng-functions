@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
+using MeCab;
 
 namespace SpeechEng.Functions;
 
@@ -141,19 +142,11 @@ private double calculate(string text1, string text2)
 
     private string[] breakUp(string text)
     {
-    throw new NotImplementedException();
-    // using (var tagger = MeCabTagger.Create(Environment.GetEnvironmentVariable("MeCabDicDir")))
-        // {
-        //     var node = tagger.Parse(text);
-        //     var ret = new List<string>();
-        //     while (node != null)
-        //     {
-        //         ret.Add(node.Surface);
-        //         log.LogInformation(node.Surface);
-        //         node = node.Next;
-        //     }
-        //     return ret.ToArray();
-        // }
+        var parameter = new MeCabParam(Environment.GetEnvironmentVariable("MeCabDicDir"));
+        using (var tagger = MeCabTagger.Create(parameter))
+        {
+            return tagger.ParseToNodes(text).Select(q => q.Surface).ToArray();
+        }
     }
 
 private static int[] make_flags(string[] uniques, string[] elements)
