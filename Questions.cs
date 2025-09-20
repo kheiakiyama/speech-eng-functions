@@ -33,9 +33,6 @@ public class Questions
 private async Task<IActionResult> Get(HttpRequest req)
 {
     string? timeText = req.Query["time"].FirstOrDefault();
-    dynamic? data = await req.ReadFromJsonAsync<object>();
-    timeText = timeText ?? (data?.id as string);
-
     if (timeText == null)
         return new BadRequestObjectResult(new { error = "Please pass time on the query string or in the request body." });
 
