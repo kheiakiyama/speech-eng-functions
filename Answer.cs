@@ -35,6 +35,9 @@ public class Answer
             return new BadRequestObjectResult(new { error = "Please pass a id and sentence on the query string or in the request body." });
 
         var question = QuestionEntity.GetEntity(dto.Id);
+        if (question == null)
+            return new BadRequestObjectResult(new { error = "Question not found." });
+
         _logger.LogInformation($"question:{question?.RowKey},{question?.Sentence}");
         if (question == null)
         {
