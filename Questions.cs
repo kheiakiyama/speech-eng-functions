@@ -20,6 +20,7 @@ public class Questions
     public Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequest req)
     {
         _logger.LogInformation("C# HTTP trigger function processed a request.");
+        _logger.LogInformation($"Method: {req.Method}");
         if (req.Method == "GET")
         {
             return Get(req);
