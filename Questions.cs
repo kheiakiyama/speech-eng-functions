@@ -67,16 +67,13 @@ private async Task<IActionResult> Get(HttpRequest req)
 
 private async Task<IActionResult> Post(HttpRequest req)
 {
-    string? id = req.Query["id"].FirstOrDefault();
-    string? sentence = req.Query["sentence"].FirstOrDefault();
     dynamic? data = await req.ReadFromJsonAsync<object>();
-    id = id ?? data?.id;
-    sentence = sentence ?? data?.sentence;
-
-    if (id == null || sentence == null)
+    _logger.LogInformation($"data:{data?.id},{data?.sentence}");
+    if (data?.id == null || data?.sentence == null)
         return new BadRequestObjectResult(new { error = "Please pass a id and sentence on the query string or in the request body." });
 
-    var question = QuestionEntity.GetEntity(id);
+    var question = QuestionEntity.GetEntity(data?.id);
+    _logger.LogInformation($"question:{question?.RowKey},{question?.Sentence}");
     if (question == null)
     {
         var customResponse = new
@@ -91,7 +88,7 @@ private async Task<IActionResult> Post(HttpRequest req)
         };
     }
     question.ResultCount += 1;
-    var cos = calculate(question.Sentence, sentence);
+    var cos = calculate(question.Sentence, data?.sentence);
     _logger.LogInformation($"cos:{cos}");
     var perfectStr = Environment.GetEnvironmentVariable("BORDER_PERFECT");
     var goodStr = Environment.GetEnvironmentVariable("BORDER_GOOD");
