@@ -23,15 +23,12 @@ public class Answer
     }
 
     [Function("Answers")]
-    public IActionResult PostAnswer([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req)
+    public async Task<IActionResult> PostAnswer([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req)
     {
         _logger.LogInformation("You can get additional information about the request such as:");
         _logger.LogInformation($" length : {req.ContentLength}");
         _logger.LogInformation($" type   : {req.ContentType}");
-
-        var dto = new PostAnswerDTO();
-        dto.Id = req.Form["id"];
-        dto.Sentence = req.Form["sentence"];
+        var dto = await req.ReadFromJsonAsync<PostAnswerDTO>();
 
         _logger.LogInformation($"dto:{dto.Id},{dto.Sentence}");
         if (dto.Id == null || dto.Sentence == null)
