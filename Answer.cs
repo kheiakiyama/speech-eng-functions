@@ -104,7 +104,9 @@ public class Answer
         var parameter = new MeCabParam(Environment.GetEnvironmentVariable("MeCabDicDir"));
         using (var tagger = MeCabTagger.Create(parameter))
         {
-            return tagger.ParseToNodes(text).Select(q => q.Surface).ToArray();
+            return tagger.ParseToNodes(text)
+                .Select(q => q.Surface.ToLower())
+                .ToArray();
         }
     }
 
