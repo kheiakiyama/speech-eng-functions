@@ -7,6 +7,12 @@ using MeCab;
 
 namespace SpeechEng.Functions;
 
+public class PostAnswerDTO
+{
+    public string? Id { get; set; }
+    public string? Sentence { get; set; }
+}
+
 public class Questions
 {
     private readonly ILogger<Questions> _logger;
@@ -52,20 +58,14 @@ public class Questions
         });
     }
 
-    public class PostAnswerDTO
-    {
-        public string? Id { get; set; }
-        public string? Sentence { get; set; }
-    }
-
     [Function("Questions")]
-    public IActionResult PostAnswer([HttpTrigger(AuthorizationLevel.Anonymous, "post")] PostAnswerDTO req)
+    public IActionResult PostAnswer([HttpTrigger(AuthorizationLevel.Anonymous, "post")] PostAnswerDTO dto, HttpRequest req)
     {
-        _logger.LogInformation($"data:{req.Id},{req.Sentence}");
-        if (req.Id == null || req.Sentence == null)
+        _logger.LogInformation($"dto:{dto.Id},{dto.Sentence}");
+        if (dto.Id == null || dto.Sentence == null)
             return new BadRequestObjectResult(new { error = "Please pass a id and sentence on the query string or in the request body." });
 
-        var question = QuestionEntity.GetEntity(req.Id);
+        var question = QuestionEntity.GetEntity(dto.Id);
         _logger.LogInformation($"question:{question?.RowKey},{question?.Sentence}");
         if (question == null)
         {
@@ -81,7 +81,7 @@ public class Questions
             };
         }
         question.ResultCount += 1;
-        var cos = calculate(question.Sentence, req.Sentence);
+        var cos = calculate(question.Sentence, dto.Sentence);
         _logger.LogInformation($"cos:{cos}");
         var perfectStr = Environment.GetEnvironmentVariable("BORDER_PERFECT");
         var goodStr = Environment.GetEnvironmentVariable("BORDER_GOOD");
