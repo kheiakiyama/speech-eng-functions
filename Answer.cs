@@ -23,8 +23,16 @@ public class Answer
     }
 
     [Function("Answers")]
-    public IActionResult PostAnswer([HttpTrigger(AuthorizationLevel.Anonymous, "post")] PostAnswerDTO dto, HttpRequest req)
+    public IActionResult PostAnswer([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req)
     {
+        _logger.LogInformation("You can get additional information about the request such as:");
+        _logger.LogInformation($" length : {req.ContentLength}");
+        _logger.LogInformation($" type   : {req.ContentType}");
+
+        var dto = new PostAnswerDTO();
+        dto.Id = req.Form["id"];
+        dto.Sentence = req.Form["sentence"];
+
         _logger.LogInformation($"dto:{dto.Id},{dto.Sentence}");
         if (dto.Id == null || dto.Sentence == null)
             return new BadRequestObjectResult(new { error = "Please pass a id and sentence on the query string or in the request body." });
